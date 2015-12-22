@@ -67,8 +67,15 @@ Vagrant.configure(2) do |config|
   config.vm.provision "shell", inline: <<-SHELL
     sudo apt-get update
     sudo apt-get install -y build-essential
-    curl -sL https://deb.nodesource.com/setup_4.x | sudo -E bash -
-    sudo apt-get install -y nodejs
+    echo 'export PATH=$HOME/local/bin:$PATH' >> ~/.bashrc
+    . ~/.bashrc
+    mkdir ~/local
+    mkdir ~/node-latest-install
+    cd ~/node-latest-install
+    curl http://nodejs.org/dist/node-latest.tar.gz | tar xz --strip-components=1
+    ./configure --prefix=~/local
+    make install # ok, fine, this step probably takes more than 30 seconds...
+    curl http://npmjs.org/install.sh | sh
     sudo apt-get install -y ruby-full
     sudo su -c "gem install -y sass"
     sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10
